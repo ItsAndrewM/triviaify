@@ -4,7 +4,7 @@ import useSWR from "swr";
 
 const useFetchActiveSessions = () => {
 	const { data, error, mutate } = useSWR<ActiveSession[]>(
-		"http://localhost:3000/api/sessions/active",
+		`${process.env.NEXT_PUBLIC_SITE_URL}/api/sessions/active`,
 		fetcher
 	);
 

@@ -21,7 +21,7 @@ export interface SessionResult {
 
 export async function POST(request: NextRequest) {
 	const body: CreateSessionBody = await request.json();
-	await fetch("http://localhost:3000/api/socketio");
+	await fetch(`${process.env.SITE_URL}/api/socketio`);
 
 	const { session_code, creator_name, session_name, name } = body;
 

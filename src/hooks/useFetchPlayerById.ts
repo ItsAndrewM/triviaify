@@ -11,7 +11,7 @@ export interface Player {
 
 const useFetchActiveSessions = (session_code: string, player_id: string) => {
 	const { data, error, mutate } = useSWR<Player>(
-		`http://localhost:3000/api/sessions/session/${session_code}/players/${player_id}`,
+		`${process.env.NEXT_PUBLIC_SITE_URL}/api/sessions/session/${session_code}/players/${player_id}`,
 		fetcher
 	);
 

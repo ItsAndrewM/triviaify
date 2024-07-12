@@ -1,17 +1,19 @@
 export const getActiveSessions = async () => {
-	const result = await fetch("http://localhost:3000/api/sessions/active");
+	const result = await fetch(`${process.env.SITE_URL}/api/sessions/active`);
 	const data = await result.json();
 	return data;
 };
 
 export const getSession = async (sessionId: string) => {
-	const result = await fetch(`http://localhost:3000/api/sessions/${sessionId}`);
+	const result = await fetch(
+		`${process.env.SITE_URL}/api/sessions/${sessionId}`
+	);
 	const data = await result.json();
 	return data;
 };
 
 export const createSession = async (session: any) => {
-	const result = await fetch("http://localhost:3000/api/sessions", {
+	const result = await fetch(`${process.env.SITE_URL}/api/sessions`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
@@ -24,7 +26,7 @@ export const createSession = async (session: any) => {
 
 export const joinSession = async (sessionId: string, userId: string) => {
 	const result = await fetch(
-		`http://localhost:3000/api/sessions/${sessionId}/join`,
+		`${process.env.SITE_URL}/api/sessions/${sessionId}/join`,
 		{
 			method: "POST",
 			headers: {
@@ -40,13 +42,13 @@ export const joinSession = async (sessionId: string, userId: string) => {
 };
 
 export const getUser = async (userId: string) => {
-	const result = await fetch(`http://localhost:3000/api/users/${userId}`);
+	const result = await fetch(`${process.env.SITE_URL}/api/users/${userId}`);
 	const data = await result.json();
 	return data;
 };
 
 export const createUser = async (user: any) => {
-	const result = await fetch("http://localhost:3000/api/users", {
+	const result = await fetch(`${process.env.SITE_URL}/api/users`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
@@ -58,21 +60,27 @@ export const createUser = async (user: any) => {
 };
 
 export const updateUser = async (userId: string, user: any) => {
-	const result = await fetch(`http://localhost:3000/api/users/${userId}`, {
-		method: "PUT",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify(user),
-	});
+	const result = await fetch(
+		`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
+		{
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(user),
+		}
+	);
 	const data = await result.json();
 	return data;
 };
 
 export const deleteUser = async (userId: string) => {
-	const result = await fetch(`http://localhost:3000/api/users/${userId}`, {
-		method: "DELETE",
-	});
+	const result = await fetch(
+		`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
+		{
+			method: "DELETE",
+		}
+	);
 	const data = await result.json();
 	return data;
 };

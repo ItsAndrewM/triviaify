@@ -16,7 +16,7 @@ export const createSession = async (formData: FormData) => {
 		session_name,
 		name,
 	};
-	const result = await fetch("http://localhost:3000/api/sessions/create", {
+	const result = await fetch(`${process.env.SITE_URL}/api/sessions/create`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
@@ -45,7 +45,7 @@ export const joinSession = async (formData: FormData) => {
 		name,
 		display_name,
 	};
-	const result = await fetch("http://localhost:3000/api/sessions/join", {
+	const result = await fetch(`${process.env.SITE_URL}/api/sessions/join`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
