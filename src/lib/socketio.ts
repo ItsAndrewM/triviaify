@@ -1,13 +1,23 @@
 import { Server as SocketIOServer } from "socket.io";
-import type { Server as HTTPServer } from "http";
+import { createServer, Server as HTTPServer } from "http";
+import { NextApiResponse } from "next";
 
+let httpServer: HTTPServer | null = null;
 let io: SocketIOServer | null = null;
 
-export const initSocketIO = (server: HTTPServer) => {
-	if (io) return io;
+export const initSocketIO = () => {
+	if (io) {
+		return io;
+	}
 
-	io = new SocketIOServer(server, {
-		path: "/api/socketio",
+	if (!httpServer) {
+		httpServer = createServer();
+		httpServer.listen(3001); // Choose a port that doesn't conflict with your Next.js app
+	}
+
+	io = new SocketIOServer(httpServer, {
+		path: "http://localhost:3000/api/socketio",
+		addTrailingSlash: false,
 	});
 
 	io.on("connection", (socket) => {
@@ -29,9 +39,7 @@ export const initSocketIO = (server: HTTPServer) => {
 
 export const getSocketIO = () => {
 	if (!io) {
-		throw new Error(
-			"Socket.IO has not been initialized. Please call initSocketIO first."
-		);
+		return initSocketIO();
 	}
 	return io;
 };

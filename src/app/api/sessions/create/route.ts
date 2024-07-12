@@ -1,3 +1,4 @@
+import { getSocketIO } from "@/lib/socketio";
 // app/api/sessions/create/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/utils/db";
@@ -19,9 +20,10 @@ export interface SessionResult {
 	session_name: string;
 }
 
+export const runtime = "nodejs";
+
 export async function POST(request: NextRequest) {
 	const body: CreateSessionBody = await request.json();
-	await fetch(`${process.env.SITE_URL}/api/socketio`);
 
 	const { session_code, creator_name, session_name, name } = body;
 
@@ -71,17 +73,12 @@ export async function POST(request: NextRequest) {
 			[sessionId, name, creator_name]
 		);
 
-		console.log(playerResult);
-
 		if (playerResult.rows.length === 0) {
 			return NextResponse.json({
 				error: "Player insert failed",
 				status: 404,
 			});
 		}
-
-		console.log(playerResult.rows[0].id);
-		console.log("cookies", cookies().get("player_id")?.value);
 
 		// Use the emitToSession function to emit events
 

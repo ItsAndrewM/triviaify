@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "./globals.css";
+import SocketInitializer from "@/components/component/socket-initializer";
 
 const fontHeading = Inter({
 	subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({
 			<body
 				className={cn("antialiased", fontHeading.variable, fontBody.variable)}
 			>
+				<SocketInitializer />
 				<main className="flex min-h-screen flex-col items-center justify-start w-full">
 					{children}
 				</main>

@@ -1,19 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { initSocketIO } from "@/lib/socketio";
-import type { Server as HTTPServer } from "http";
 
-let socketIOInitialized = false;
+export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
-	const { socket } = req as any;
-	const res = new NextResponse();
-	if (!socketIOInitialized) {
-		console.log("Initializing Socket.IO");
-		const httpServer = socket as unknown as HTTPServer;
-		initSocketIO(httpServer);
-		socketIOInitialized = true;
-	}
-	return new NextResponse("Socket.IO server running");
-}
+	const io = initSocketIO();
 
-export const dynamic = "force-dynamic";
+	if (io) {
+		console.log("Socket.IO is running");
+		return new NextResponse("Socket.IO is running", { status: 200 });
+	} else {
+		console.log("Failed to initialize Socket.IO");
+		return new NextResponse("Failed to initialize Socket.IO", { status: 500 });
+	}
+}
