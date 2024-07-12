@@ -8,7 +8,7 @@ import { SessionResult } from "@/app/api/sessions/create/route";
 
 export function useRealTimePlayers(sessionCode: string) {
 	const { data, error, mutate } = useSWR<SessionAndPlayers>(
-		`/api/sessions/session/${sessionCode}/players`,
+		`${process.env.NEXT_PUBLIC_SITE_URL}/api/sessions/session/${sessionCode}/players`,
 		fetcher,
 		{
 			refreshInterval: 5000, // Refresh every 5 seconds
@@ -17,7 +17,7 @@ export function useRealTimePlayers(sessionCode: string) {
 
 	useEffect(() => {
 		const socket = io({
-			path: "/api/socketio",
+			path: `${process.env.NEXT_PUBLIC_SITE_URL}/api/socketio`,
 		});
 
 		socket.on("connect", () => {
