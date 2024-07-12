@@ -62,7 +62,12 @@ export function WaitingRoom({
 	return (
 		<div className="bg-background text-foreground rounded-lg shadow-lg p-6 w-full max-w-3xl mx-auto my-24">
 			<div className="flex items-center justify-between mb-6">
-				<h2 className="text-2xl font-bold">Waiting Room</h2>
+				<h2 className="text-2xl font-bold">
+					Waiting Room for{" "}
+					<span className="font-medium underline underline-offset-2">
+						{realTimePlayers?.session.session_name}
+					</span>
+				</h2>
 				<div className="flex items-center gap-2">
 					<UsersIcon className="w-5 h-5 text-muted-foreground" />
 					<span className="text-muted-foreground">
@@ -73,19 +78,39 @@ export function WaitingRoom({
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
 				{realTimePlayers?.players.map((player) => (
 					<div
-						className={`bg-muted rounded-lg p-4 flex flex-col items-center justify-between ${
+						className={`bg-muted rounded-lg p-4 flex flex-col items-center justify-between relative ${
 							player.display_name === realTimePlayers?.session.creator_name
 								? "border-2 border-primary"
+								: Number(playerId) === Number(player.id)
+								? "border-2 border-green-500"
 								: ""
-						}`}
+						} `}
 						key={player.id}
 					>
+						<span
+							className={`absolute top-0 left-0 -translate-x-1/3 -translate-y-1/2 px-2 py-1 bg-green-500 text-primary-foreground rounded-full ${
+								Number(playerId) === Number(player.id) ? "visible" : "invisible"
+							}`}
+						>
+							You
+						</span>
+						<span
+							className={`absolute top-0 right-0 -translate-y-1/2 px-2 py-1 bg-primary text-primary-foreground rounded-full ${
+								player.display_name === realTimePlayers?.session.creator_name
+									? "visible"
+									: "invisible"
+							}`}
+						>
+							Creator
+						</span>
 						<div className="w-full flex items-center justify-center gap-2">
 							<Avatar className="w-8 h-8">
 								<AvatarImage src="/placeholder-user.jpg" />
 								<AvatarFallback>P{player.id}</AvatarFallback>
 							</Avatar>
-							<span className="font-medium">{player.display_name}</span>
+							<span className="font-medium">
+								{player.display_name} ({player.id})
+							</span>
 						</div>
 						<div className="w-full flex items-center justify-center gap-2">
 							{player.ready ? (

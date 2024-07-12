@@ -117,9 +117,9 @@ export function ActiveSessions() {
 										</DialogTrigger>
 										<DialogContent className="sm:max-w-[425px]">
 											<DialogHeader>
-												<DialogTitle>Join Session</DialogTitle>
+												<DialogTitle>Join {session.session_name}</DialogTitle>
 												<DialogDescription>
-													Enter the session code to join this trivia session.
+													Press join to join this trivia session.
 												</DialogDescription>
 											</DialogHeader>
 											<form
