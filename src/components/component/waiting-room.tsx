@@ -125,10 +125,7 @@ export function WaitingRoom({
 				))}
 			</div>
 			<div className="flex justify-center mt-6">
-				<Button
-					onClick={() => setIsReady(!isReady)}
-					className={`${isReady ? "bg-red-500" : "bg-green-500"}`}
-				>
+				<Button onClick={() => setIsReady(!isReady)}>
 					{isReady ? "Not Ready \u274C" : "Ready \u2705"}
 				</Button>
 			</div>
