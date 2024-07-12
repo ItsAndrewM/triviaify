@@ -21,13 +21,42 @@ import { UsersIcon } from "../icons/usersIcon";
 import { TrophyIcon } from "../icons/trophyIcon";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { Key } from "react";
+import { Key, useState } from "react";
 import useFetchActiveSessions from "@/hooks/useFetchActiveSessions";
 import { SessionResult } from "@/app/api/sessions/create/route";
+import { useRouter } from "next/navigation";
+import { joinSession } from "@/utils/actions";
 
 export function ActiveSessions() {
-	const { data: activeSessions } = useFetchActiveSessions();
+	const { data: activeSessions, mutate } = useFetchActiveSessions();
+	const [isJoinLoading, setIsJoinLoading] = useState(false);
 	console.log(activeSessions);
+
+	const [session, setSession] = useState<SessionResult | null>(null);
+	const router = useRouter();
+
+	const onJoinSessionClick = async (
+		event: React.FormEvent<HTMLFormElement>
+	) => {
+		event.preventDefault();
+		const formData = new FormData(event.currentTarget);
+		try {
+			setIsJoinLoading(true);
+			const response = await joinSession(formData);
+			let result;
+			if ("json" in response) {
+				result = await response.json();
+			}
+			setSession(result);
+			setIsJoinLoading(false);
+			mutate();
+			router.push(`/session/${result.session_code}/waiting-room`);
+		} catch (error: any) {
+			setIsJoinLoading(false);
+			alert(error.message);
+		}
+	};
+
 	return (
 		<section className="py-16">
 			<div className="container px-4">
@@ -92,13 +121,36 @@ export function ActiveSessions() {
 													Enter the session code to join this trivia session.
 												</DialogDescription>
 											</DialogHeader>
-											<div className="grid gap-4 py-4">
+											<form
+												className="grid gap-4 py-4"
+												id="join-session-form"
+												onSubmit={onJoinSessionClick}
+											>
 												<Input
 													id="sessionCode"
 													placeholder="Enter session code"
 													className="w-full"
+													name="session_code"
+													type="text"
+													required
 												/>
-											</div>
+												<Input
+													id="display_name"
+													placeholder="Your Display Name"
+													className="w-full"
+													name="display_name"
+													type="text"
+													required
+												/>
+												<Input
+													id="name"
+													placeholder="Your Name"
+													className="w-full"
+													name="name"
+													type="text"
+													required
+												/>
+											</form>
 											<DialogFooter>
 												<Button>Join</Button>
 											</DialogFooter>
