@@ -5,10 +5,11 @@ import type { Server as HTTPServer } from "http";
 let socketIOInitialized = false;
 
 export async function GET(req: NextRequest) {
+	const { socket } = req as any;
 	const res = new NextResponse();
 	if (!socketIOInitialized) {
 		console.log("Initializing Socket.IO");
-		const httpServer = res.socket as unknown as HTTPServer;
+		const httpServer = socket as unknown as HTTPServer;
 		initSocketIO(httpServer);
 		socketIOInitialized = true;
 	}
