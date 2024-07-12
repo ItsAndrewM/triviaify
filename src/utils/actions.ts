@@ -16,13 +16,16 @@ export const createSession = async (formData: FormData) => {
 		session_name,
 		name,
 	};
-	const result = await fetch(`${process.env.SITE_URL}/api/sessions/create`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify(session),
-	});
+	const result = await fetch(
+		`${process.env.NEXT_PUBLIC_SITE_URL}/api/sessions/create`,
+		{
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(session),
+		}
+	);
 	if (!result.ok) {
 		return { error: "Something went wrong" };
 	}
@@ -45,13 +48,16 @@ export const joinSession = async (formData: FormData) => {
 		name,
 		display_name,
 	};
-	const result = await fetch(`${process.env.SITE_URL}/api/sessions/join`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify(session),
-	});
+	const result = await fetch(
+		`${process.env.NEXT_PUBLIC_SITE_URL}/api/sessions/join`,
+		{
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(session),
+		}
+	);
 	if (!result.ok) {
 		return { error: "Something went wrong" };
 	}
