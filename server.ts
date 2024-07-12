@@ -23,7 +23,10 @@ app.prepare().then(() => {
 	// Initialize Socket.IO
 	initSocketIO(server);
 
-	server.listen(3000, () => {
-		console.log(`> Ready on ${process.env.SITE_URL}`);
+	const port = process.env.PORT || 3000;
+	server.listen(port, () => {
+		console.log(
+			`> Ready on ${process.env.SITE_URL || `http://localhost:${port}`}`
+		);
 	});
 });
