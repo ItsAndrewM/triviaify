@@ -1,23 +1,14 @@
 import { Server as SocketIOServer } from "socket.io";
-import { createServer, Server as HTTPServer } from "http";
-import { NextApiResponse } from "next";
+import type { Server as HTTPServer } from "http";
 
-let httpServer: HTTPServer | null = null;
 let io: SocketIOServer | null = null;
 
-export const initSocketIO = () => {
-	if (io) {
-		return io;
-	}
+export const initSocketIO = (server: HTTPServer) => {
+	console.log(server);
+	if (io) return io;
 
-	if (!httpServer) {
-		httpServer = createServer();
-		httpServer.listen(3001); // Choose a port that doesn't conflict with your Next.js app
-	}
-
-	io = new SocketIOServer(httpServer, {
-		path: "http://localhost:3000/api/socketio",
-		addTrailingSlash: false,
+	io = new SocketIOServer(server, {
+		path: "/socket.io",
 	});
 
 	io.on("connection", (socket) => {
@@ -26,6 +17,30 @@ export const initSocketIO = () => {
 		socket.on("joinSession", (sessionCode: string) => {
 			socket.join(sessionCode);
 			console.log(`Socket joined session: ${sessionCode}`);
+		});
+
+		socket.on("leaveSession", (sessionCode: string) => {
+			socket.leave(sessionCode);
+			console.log(`Socket left session: ${sessionCode}`);
+		});
+
+		socket.on(
+			"sendMessage",
+			(messageData: {
+				sender: string;
+				message: string;
+				sessionCode: string;
+			}) => {
+				if (io) {
+					io.to(messageData.sessionCode).emit("newMessage", messageData);
+				}
+			}
+		);
+
+		socket.on("playerJoined", (playerData) => {
+			if (io) {
+				socket.to(playerData.sessionCode).emit("playerJoined", playerData);
+			}
 		});
 
 		socket.on("disconnect", () => {
@@ -39,7 +54,9 @@ export const initSocketIO = () => {
 
 export const getSocketIO = () => {
 	if (!io) {
-		return initSocketIO();
+		throw new Error(
+			"Socket.IO has not been initialized. Please call initSocketIO first."
+		);
 	}
 	return io;
 };

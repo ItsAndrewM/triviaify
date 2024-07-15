@@ -13,11 +13,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createSession, joinSession } from "@/utils/actions";
 import useFetchActiveSessions from "@/hooks/useFetchActiveSessions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Spinner } from "../ui/spinner";
 import { SessionCreated } from "./session-created";
 import { SessionResult } from "@/app/api/sessions/create/route";
 import { useRouter } from "next/navigation";
+import { useSocket } from "@/hooks/useSocket";
 
 export function HeroTriviaify() {
 	const { mutate } = useFetchActiveSessions();
@@ -26,12 +27,26 @@ export function HeroTriviaify() {
 	const [sessionCreated, setSessionCreated] = useState(false);
 	const [session, setSession] = useState<SessionResult | null>(null);
 	const router = useRouter();
+	const { socket, isConnected } = useSocket();
+
+	useEffect(() => {
+		if (socket && isConnected) {
+			console.log("Socket connected");
+		}
+		if (!isConnected || !socket) {
+			console.log("Socket not connected");
+		}
+	}, [socket, isConnected]);
 
 	const onJoinSessionClick = async (
 		event: React.FormEvent<HTMLFormElement>
 	) => {
 		event.preventDefault();
 		const formData = new FormData(event.currentTarget);
+		if (!isConnected || !socket) {
+			alert("Please connect to the server first");
+			return;
+		}
 		try {
 			setIsJoinLoading(true);
 			const response = await joinSession(formData);
@@ -52,6 +67,10 @@ export function HeroTriviaify() {
 	const onNewSessionClick = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		const formData = new FormData(event.currentTarget);
+		if (!isConnected || !socket) {
+			alert("Please connect to the server first");
+			return;
+		}
 		try {
 			setIsLoading(true);
 			const response = await createSession(formData);
